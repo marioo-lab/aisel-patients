@@ -14,7 +14,8 @@ export type ColumnCallbacks = {
   onDelete: (p: PatientDTO) => void;
 };
 
-const muted = "overflow-hidden text-[13.5px] text-ellipsis whitespace-nowrap text-text-muted";
+const muted =
+  "overflow-hidden text-[13.5px] text-ellipsis whitespace-nowrap text-text-muted";
 
 export function getColumns({
   canEdit,
@@ -42,7 +43,7 @@ export function getColumns({
               {av.initials}
             </span>
             <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap">
-              {p.firstName} {p.lastName}
+              {p.lastName} {p.firstName}
             </span>
           </div>
         );
