@@ -1,0 +1,50 @@
+// Aisel Patients — Prisma 6 schema
+// Two entities: User (authenticated account) and Patient (the directory record).
+// See CONTEXT.md for domain language and docs/adr/ for decisions.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Neon: pooled connection for runtime queries, direct (unpooled) for migrations.
+  url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  admin
+  user
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(user)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  patientsCreated Patient[] @relation("PatientCreatedBy")
+}
+
+model Patient {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String   @unique
+  phoneNumber String
+  dob         DateTime @db.Date
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Authorship (ADR: one relation to satisfy "relations & constraints").
+  // Nullable + SetNull so removing a User never deletes their Patients.
+  createdById String?
+  createdBy   User?   @relation("PatientCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([lastName])
+  @@index([createdAt])
+}
