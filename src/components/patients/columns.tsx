@@ -6,7 +6,8 @@ import { avatar, age, formatDob } from "@/lib/patient-display";
 import { RowActions } from "./row-actions";
 
 export type ColumnCallbacks = {
-  isAdmin: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
   isDark: boolean;
   onView: (p: PatientDTO) => void;
   onEdit: (p: PatientDTO) => void;
@@ -22,7 +23,8 @@ const muted: React.CSSProperties = {
 };
 
 export function getColumns({
-  isAdmin,
+  canEdit,
+  canDelete,
   isDark,
   onView,
   onEdit,
@@ -114,7 +116,8 @@ export function getColumns({
       cell: ({ row }) => (
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <RowActions
-            isAdmin={isAdmin}
+            canEdit={canEdit}
+            canDelete={canDelete}
             onView={() => onView(row.original)}
             onEdit={() => onEdit(row.original)}
             onDelete={() => onDelete(row.original)}

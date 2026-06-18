@@ -13,12 +13,14 @@ const item =
   "rounded-lg px-2.25 py-2.25 text-[13.5px] font-[550] gap-2.5 focus:bg-row-hover";
 
 export function RowActions({
-  isAdmin,
+  canEdit,
+  canDelete,
   onView,
   onEdit,
   onDelete,
 }: {
-  isAdmin: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
   onView: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -53,12 +55,14 @@ export function RowActions({
           <EyeIcon size={16} style={{ stroke: "var(--text-muted)" }} />
           View details
         </DropdownMenuItem>
-        {isAdmin && (
+        {canEdit && (
+          <DropdownMenuItem onSelect={onEdit} className={item}>
+            <EditIcon size={16} style={{ stroke: "var(--text-muted)" }} />
+            Edit patient
+          </DropdownMenuItem>
+        )}
+        {canDelete && (
           <>
-            <DropdownMenuItem onSelect={onEdit} className={item}>
-              <EditIcon size={16} style={{ stroke: "var(--text-muted)" }} />
-              Edit patient
-            </DropdownMenuItem>
             <DropdownMenuSeparator className="my-1.25 mx-1 bg-border" />
             <DropdownMenuItem
               variant="destructive"

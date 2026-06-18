@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { CloseIcon, EditIcon, TrashIcon } from "@/components/icons";
+import { Skeleton } from "@/components/ui/skeleton";
 import { usePatient } from "@/hooks/use-patients";
 import { avatar, age, formatDob } from "@/lib/patient-display";
 import type { PatientDTO } from "@/lib/validations/patient";
@@ -10,7 +11,8 @@ import type { PatientDTO } from "@/lib/validations/patient";
 export function PatientViewSheet({
   open,
   patientId,
-  isAdmin,
+  canEdit,
+  canDelete,
   isDark,
   onEdit,
   onDelete,
@@ -18,7 +20,8 @@ export function PatientViewSheet({
 }: {
   open: boolean;
   patientId: string | null;
-  isAdmin: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
   isDark: boolean;
   onEdit: (p: PatientDTO) => void;
   onDelete: (p: PatientDTO) => void;
@@ -84,9 +87,7 @@ export function PatientViewSheet({
         </div>
 
         <div style={{ flex: 1, overflowY: "auto", padding: "22px 20px" }}>
-          {isLoading && (
-            <div style={{ color: "var(--text-muted)", fontSize: 14 }}>Loading…</div>
-          )}
+          {isLoading && <ViewSkeleton />}
           {error && !isLoading && (
             <div style={{ color: "#dc3838", fontSize: 14 }}>
               Couldn&apos;t load this patient.
@@ -173,7 +174,7 @@ export function PatientViewSheet({
           )}
         </div>
 
-        {isAdmin && patient && (
+        {patient && (canEdit || canDelete) && (
           <div
             style={{
               display: "flex",
@@ -182,50 +183,91 @@ export function PatientViewSheet({
               borderTop: "1px solid var(--border)",
             }}
           >
-            <button
-              onClick={() => onDelete(patient)}
-              className="aisel-danger"
-              style={{
-                flex: "none",
-                display: "flex",
-                alignItems: "center",
-                gap: 7,
-                height: 42,
-                padding: "0 16px",
-                borderRadius: 10,
-                border: "1px solid color-mix(in srgb,#dc3838 35%,transparent)",
-                color: "#dc3838",
-                fontWeight: 600,
-                fontSize: 14,
-                background: "var(--surface)",
-              }}
-            >
-              <TrashIcon size={16} />
-              Delete
-            </button>
-            <button
-              onClick={() => onEdit(patient)}
-              className="aisel-primary"
-              style={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 7,
-                height: 42,
-                borderRadius: 10,
-                background: "var(--primary)",
-                color: "var(--primary-fg)",
-                fontWeight: 650,
-                fontSize: 14,
-              }}
-            >
-              <EditIcon size={16} />
-              Edit patient
-            </button>
+            {canDelete && (
+              <button
+                onClick={() => onDelete(patient)}
+                className="aisel-danger"
+                style={{
+                  flex: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 7,
+                  height: 42,
+                  padding: "0 16px",
+                  borderRadius: 10,
+                  border: "1px solid color-mix(in srgb,#dc3838 35%,transparent)",
+                  color: "#dc3838",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  background: "var(--surface)",
+                }}
+              >
+                <TrashIcon size={16} />
+                Delete
+              </button>
+            )}
+            {canEdit && (
+              <button
+                onClick={() => onEdit(patient)}
+                className="aisel-primary"
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 7,
+                  height: 42,
+                  borderRadius: 10,
+                  background: "var(--primary)",
+                  color: "var(--primary-fg)",
+                  fontWeight: 650,
+                  fontSize: 14,
+                }}
+              >
+                <EditIcon size={16} />
+                Edit patient
+              </button>
+            )}
           </div>
         )}
       </SheetContent>
     </Sheet>
+  );
+}
+
+/** Loading placeholder that mirrors the detail layout (avatar + name + info rows). */
+function ViewSkeleton() {
+  return (
+    <>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
+        <Skeleton className="rounded-full" style={{ width: 58, height: 58, flex: "none" }} />
+        <Skeleton style={{ height: 20, width: 160 }} />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          border: "1px solid var(--border)",
+          borderRadius: 12,
+          overflow: "hidden",
+        }}
+      >
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 16,
+              padding: "13px 15px",
+            }}
+          >
+            <Skeleton style={{ height: 13, width: 72 }} />
+            <Skeleton style={{ height: 13, width: 110 }} />
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

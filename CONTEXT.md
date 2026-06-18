@@ -18,10 +18,13 @@ The authorization level carried by a **User**. One of two values: **Admin** or `
 - **Admin** — may create, edit, and delete **Patients**, in addition to reading them.
 - `user` — read-only access to **Patients**. Surfaced in the UI under the label **Member**.
 
+**Permission**:
+A single capability over **Patients** (`patient:read`, `patient:create`, `patient:update`, `patient:delete`). A **Role** is a named bundle of Permissions. Authorization — in both the API guards and the UI gating — tests Permissions, never Roles directly.
+
 ## Relationships
 
 - A **User** has exactly one **Role**.
-- **Role** governs which actions a **User** may perform on **Patients** (Admin = full CRUD; `user` = read-only).
+- A **Role** grants a set of **Permissions**; a **User**'s Permissions are those of its Role (Admin = full CRUD; `user` = `patient:read` only).
 - A **Patient** is created by exactly one **User** (its creator, an Admin); that authorship is recorded on the Patient.
 
 ## Flagged ambiguities

@@ -12,6 +12,7 @@ import { DeleteDialog } from "./delete-dialog";
 import { usePatients, type PatientsParams } from "@/hooks/use-patients";
 import { showToast } from "@/components/toast";
 import { ApiError } from "@/lib/api-error";
+import { can } from "@/lib/permissions";
 import { avatar, age } from "@/lib/patient-display";
 import {
   SearchIcon,
@@ -64,7 +65,9 @@ export function PatientsClient({
 }) {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
-  const isAdmin = user.role === "admin";
+  const canCreate = can(user.role, "patient:create");
+  const canEdit = can(user.role, "patient:update");
+  const canDelete = can(user.role, "patient:delete");
   const vw = useWindowWidth();
   const isMobile = vw < 720;
   const isTablet = vw >= 720 && vw < 1040;
@@ -116,13 +119,14 @@ export function PatientsClient({
   const columns = React.useMemo(
     () =>
       getColumns({
-        isAdmin,
+        canEdit,
+        canDelete,
         isDark,
         onView: openView,
         onEdit: openEdit,
         onDelete: requestDelete,
       }),
-    [isAdmin, isDark, openView, openEdit, requestDelete]
+    [canEdit, canDelete, isDark, openView, openEdit, requestDelete]
   );
 
   const sorting: SortingState = SORTABLE.has(sort)
@@ -305,7 +309,7 @@ export function PatientsClient({
             >
               <RefreshIcon size={16} />
             </button>
-            {isAdmin && (
+            {canCreate && (
               <button
                 onClick={() => setForm({ mode: "create", patient: null })}
                 className="aisel-primary"
@@ -378,7 +382,7 @@ export function PatientsClient({
                   >
                     Clear search
                   </button>
-                ) : isAdmin ? (
+                ) : canCreate ? (
                   <button
                     onClick={() => setForm({ mode: "create", patient: null })}
                     className="aisel-primary"
@@ -497,7 +501,8 @@ export function PatientsClient({
       <PatientViewSheet
         open={viewOpen}
         patientId={viewId}
-        isAdmin={isAdmin}
+        canEdit={canEdit}
+        canDelete={canDelete}
         isDark={isDark}
         onEdit={openEdit}
         onDelete={requestDelete}

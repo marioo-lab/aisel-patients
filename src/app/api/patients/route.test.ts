@@ -3,8 +3,7 @@ import { NextRequest } from "next/server";
 import { UnauthenticatedError, ForbiddenError, ConflictError } from "@/server/lib/errors";
 
 vi.mock("@/server/lib/session", () => ({
-  requireUser: vi.fn(),
-  requireRole: vi.fn(),
+  requirePermission: vi.fn(),
 }));
 vi.mock("@/server/patients/patient.service", () => ({
   listPatients: vi.fn(),
@@ -12,7 +11,7 @@ vi.mock("@/server/patients/patient.service", () => ({
 }));
 
 import { GET, POST } from "./route";
-import { requireUser, requireRole } from "@/server/lib/session";
+import { requirePermission } from "@/server/lib/session";
 import { listPatients, createPatient } from "@/server/patients/patient.service";
 
 const admin = { id: "admin", email: "a@a.com", name: "Admin", role: "admin" as const };
@@ -36,7 +35,7 @@ beforeEach(() => vi.clearAllMocks());
 
 describe("GET /api/patients", () => {
   it("returns 200 with the list envelope for an authenticated user", async () => {
-    vi.mocked(requireUser).mockResolvedValue(admin);
+    vi.mocked(requirePermission).mockResolvedValue(admin);
     vi.mocked(listPatients).mockResolvedValue({ data: [], page: 1, limit: 10, total: 0 });
 
     const res = await GET(
@@ -47,7 +46,7 @@ describe("GET /api/patients", () => {
   });
 
   it("returns 401 when unauthenticated", async () => {
-    vi.mocked(requireUser).mockRejectedValue(new UnauthenticatedError());
+    vi.mocked(requirePermission).mockRejectedValue(new UnauthenticatedError());
     const res = await GET(new NextRequest("http://localhost/api/patients"));
     expect(res.status).toBe(401);
     await expect(res.json()).resolves.toMatchObject({
@@ -58,13 +57,13 @@ describe("GET /api/patients", () => {
 
 describe("POST /api/patients", () => {
   it("returns 403 for a non-admin", async () => {
-    vi.mocked(requireRole).mockRejectedValue(new ForbiddenError());
+    vi.mocked(requirePermission).mockRejectedValue(new ForbiddenError());
     const res = await POST(postReq(validBody));
     expect(res.status).toBe(403);
   });
 
   it("returns 400 on invalid body", async () => {
-    vi.mocked(requireRole).mockResolvedValue(admin);
+    vi.mocked(requirePermission).mockResolvedValue(admin);
     const res = await POST(postReq({ firstName: "J" }));
     expect(res.status).toBe(400);
     const body = await res.json();
@@ -73,7 +72,7 @@ describe("POST /api/patients", () => {
   });
 
   it("returns 201 and passes creator id on success", async () => {
-    vi.mocked(requireRole).mockResolvedValue(admin);
+    vi.mocked(requirePermission).mockResolvedValue(admin);
     vi.mocked(createPatient).mockResolvedValue({
       id: "p1",
       ...validBody,
@@ -86,7 +85,7 @@ describe("POST /api/patients", () => {
   });
 
   it("returns 409 with a field error on duplicate email", async () => {
-    vi.mocked(requireRole).mockResolvedValue(admin);
+    vi.mocked(requirePermission).mockResolvedValue(admin);
     vi.mocked(createPatient).mockRejectedValue(
       new ConflictError("dupe", { email: "A patient with this email already exists." })
     );

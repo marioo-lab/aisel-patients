@@ -3,8 +3,7 @@ import { NextRequest } from "next/server";
 import { NotFoundError, ForbiddenError } from "@/server/lib/errors";
 
 vi.mock("@/server/lib/session", () => ({
-  requireUser: vi.fn(),
-  requireRole: vi.fn(),
+  requirePermission: vi.fn(),
 }));
 vi.mock("@/server/patients/patient.service", () => ({
   getPatient: vi.fn(),
@@ -13,7 +12,7 @@ vi.mock("@/server/patients/patient.service", () => ({
 }));
 
 import { GET, DELETE } from "./route";
-import { requireUser, requireRole } from "@/server/lib/session";
+import { requirePermission } from "@/server/lib/session";
 import { getPatient, deletePatient } from "@/server/patients/patient.service";
 
 const admin = { id: "admin", email: "a@a.com", name: "Admin", role: "admin" as const };
@@ -24,7 +23,7 @@ beforeEach(() => vi.clearAllMocks());
 
 describe("GET /api/patients/:id", () => {
   it("returns 200 with the patient for an authenticated user", async () => {
-    vi.mocked(requireUser).mockResolvedValue(admin);
+    vi.mocked(requirePermission).mockResolvedValue(admin);
     vi.mocked(getPatient).mockResolvedValue({
       id: "p1",
       firstName: "Jane",
@@ -41,7 +40,7 @@ describe("GET /api/patients/:id", () => {
   });
 
   it("returns 404 when the patient does not exist", async () => {
-    vi.mocked(requireUser).mockResolvedValue(admin);
+    vi.mocked(requirePermission).mockResolvedValue(admin);
     vi.mocked(getPatient).mockRejectedValue(new NotFoundError("Patient not found."));
     const res = await GET(req(), ctx("missing"));
     expect(res.status).toBe(404);
@@ -51,13 +50,13 @@ describe("GET /api/patients/:id", () => {
 
 describe("DELETE /api/patients/:id", () => {
   it("returns 403 for a non-admin", async () => {
-    vi.mocked(requireRole).mockRejectedValue(new ForbiddenError());
+    vi.mocked(requirePermission).mockRejectedValue(new ForbiddenError());
     const res = await DELETE(req(), ctx("p1"));
     expect(res.status).toBe(403);
   });
 
   it("returns { ok: true } on success", async () => {
-    vi.mocked(requireRole).mockResolvedValue(admin);
+    vi.mocked(requirePermission).mockResolvedValue(admin);
     vi.mocked(deletePatient).mockResolvedValue(undefined);
     const res = await DELETE(req(), ctx("p1"));
     expect(res.status).toBe(200);
@@ -65,7 +64,7 @@ describe("DELETE /api/patients/:id", () => {
   });
 
   it("returns 404 when deleting a missing patient", async () => {
-    vi.mocked(requireRole).mockResolvedValue(admin);
+    vi.mocked(requirePermission).mockResolvedValue(admin);
     vi.mocked(deletePatient).mockRejectedValue(new NotFoundError("Patient not found."));
     const res = await DELETE(req(), ctx("missing"));
     expect(res.status).toBe(404);
