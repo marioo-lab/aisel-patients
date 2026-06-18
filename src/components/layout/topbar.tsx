@@ -55,6 +55,7 @@ export function Topbar({
 
   return (
     <header
+      className="aisel-topbar"
       style={{
         position: "sticky",
         top: 0,
@@ -86,6 +87,7 @@ export function Topbar({
           <PlusIcon size={17} style={{ stroke: "var(--primary-fg)" }} />
         </div>
         <span
+          className="aisel-mobile-hide"
           style={{
             fontWeight: 800,
             fontSize: 15.5,
@@ -166,6 +168,7 @@ export function Topbar({
                 {initials(user.name)}
               </span>
               <span
+                className="aisel-mobile-hide"
                 style={{
                   fontSize: 13.5,
                   fontWeight: 600,
