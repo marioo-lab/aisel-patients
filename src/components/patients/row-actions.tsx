@@ -30,17 +30,8 @@ export function RowActions({
       <DropdownMenuTrigger asChild>
         <button
           aria-label="Row actions"
-          className="aisel-ghost"
           onClick={(e) => e.stopPropagation()}
-          style={{
-            width: 30,
-            height: 30,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 8,
-            color: "var(--text-faint)",
-          }}
+          className="flex size-[30px] items-center justify-center rounded-lg text-text-faint transition-colors hover:bg-row-hover hover:text-text"
         >
           <DotsIcon size={17} />
         </button>

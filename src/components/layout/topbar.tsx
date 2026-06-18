@@ -21,16 +21,8 @@ import {
 
 const APP_NAME = "Aisel Patients";
 
-const iconBtn: React.CSSProperties = {
-  width: 34,
-  height: 34,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: 9,
-  color: "var(--text-muted)",
-  border: "1px solid var(--border)",
-};
+const iconBtn =
+  "flex size-8.5 items-center justify-center rounded-[9px] border border-border text-text-muted transition-colors hover:bg-row-hover hover:text-text";
 
 export function Topbar({
   user,
@@ -54,163 +46,59 @@ export function Topbar({
   }
 
   return (
-    <header
-      className="aisel-topbar"
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 40,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 14,
-        height: 60,
-        padding: "0 20px",
-        background: "color-mix(in srgb,var(--surface) 88%,transparent)",
-        backdropFilter: "blur(10px)",
-        borderBottom: "1px solid var(--border)",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 9,
-            background: "var(--primary)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flex: "none",
-          }}
-        >
-          <PlusIcon size={17} style={{ stroke: "var(--primary-fg)" }} />
+    <header className="sticky top-0 z-40 flex h-15 items-center justify-between gap-3.5 border-b border-border bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] px-5 backdrop-blur-[10px] max-sm:gap-2 max-sm:px-3">
+      <div className="flex min-w-0 items-center gap-2.5">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-[9px] bg-primary">
+          <PlusIcon size={17} className="text-primary-fg" />
         </div>
-        <span
-          className="aisel-mobile-hide"
-          style={{
-            fontWeight: 800,
-            fontSize: 15.5,
-            letterSpacing: "-.02em",
-            whiteSpace: "nowrap",
-          }}
-        >
+        <span className="text-[15.5px] font-extrabold tracking-[-0.02em] whitespace-nowrap max-sm:hidden">
           {APP_NAME}
         </span>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            height: 28,
-            padding: "0 11px",
-            borderRadius: 999,
-            fontSize: 12,
-            fontWeight: 650,
-            background: "var(--primary-soft)",
-            color: "var(--primary)",
-            border: "1px solid color-mix(in srgb,var(--primary) 22%,transparent)",
-          }}
-        >
-          <span
-            style={{
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: "var(--primary)",
-            }}
-          />
+
+      <div className="flex items-center gap-2">
+        <span className="inline-flex h-7 items-center gap-1.5 rounded-full border border-[color-mix(in_srgb,var(--primary)_22%,transparent)] bg-primary-soft px-2.75 text-xs font-[650] text-primary">
+          <span className="size-1.5 rounded-full bg-primary" />
           {isAdmin ? "Admin" : "Member"}
         </span>
 
         <button
           onClick={() => setTheme(isDark ? "light" : "dark")}
           aria-label="Toggle theme"
-          className="aisel-ghost"
-          style={iconBtn}
+          className={iconBtn}
         >
           {mounted && isDark ? <SunIcon size={17} /> : <MoonIcon size={17} />}
         </button>
 
-        <div
-          style={{ width: 1, height: 24, background: "var(--border)", margin: "0 2px" }}
-        />
+        <div className="mx-0.5 h-6 w-px bg-border" />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button
-              className="aisel-ghost"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                height: 38,
-                padding: "0 8px 0 4px",
-                borderRadius: 10,
-              }}
-            >
-              <span
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: "50%",
-                  background: "var(--primary-soft)",
-                  color: "var(--primary)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 12,
-                  fontWeight: 700,
-                }}
-              >
+            <button className="flex h-9.5 items-center gap-2 rounded-[10px] pr-2 pl-1 transition-colors hover:bg-row-hover">
+              <span className="flex size-7.5 items-center justify-center rounded-full bg-primary-soft text-xs font-bold text-primary">
                 {initials(user.name)}
               </span>
-              <span
-                className="aisel-mobile-hide"
-                style={{
-                  fontSize: 13.5,
-                  fontWeight: 600,
-                  maxWidth: 120,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
+              <span className="max-w-30 overflow-hidden text-[13.5px] font-semibold text-ellipsis whitespace-nowrap max-sm:hidden">
                 {user.name}
               </span>
-              <ChevronDownIcon size={14} style={{ stroke: "var(--text-faint)" }} />
+              <ChevronDownIcon size={14} className="text-text-faint" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
             sideOffset={8}
-            className="w-59 border border-border bg-popover shadow-(--shadow-lg) ring-0 rounded-[13px] p-2"
+            className="w-59 rounded-[13px] border border-border bg-popover p-2 shadow-(--shadow-lg) ring-0"
           >
-            <div
-              style={{
-                padding: "8px 9px 10px",
-                borderBottom: "1px solid var(--border)",
-                marginBottom: 6,
-              }}
-            >
-              <div style={{ fontSize: 13.5, fontWeight: 700 }}>{user.name}</div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: "var(--text-muted)",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
+            <div className="mb-1.5 border-b border-border px-2.25 pt-2 pb-2.5">
+              <div className="text-[13.5px] font-bold">{user.name}</div>
+              <div className="overflow-hidden text-xs text-ellipsis text-text-muted">
                 {user.email}
               </div>
             </div>
             <DropdownMenuItem
               variant="destructive"
               onSelect={signOut}
-              className="rounded-[9px] px-2.25 py-2.25 text-[13.5px] font-[550] gap-2.5"
+              className="gap-2.5 rounded-[9px] px-2.25 py-2.25 text-[13.5px] font-[550]"
             >
               <LogoutIcon size={16} />
               Sign out

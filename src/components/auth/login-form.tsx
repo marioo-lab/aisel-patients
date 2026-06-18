@@ -8,31 +8,11 @@ import { PlusIcon, EyeIcon, AlertCircleIcon } from "@/components/icons";
 
 const APP_NAME = "Aisel Patients";
 
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  height: 42,
-  padding: "0 13px",
-  border: "1px solid var(--border-strong)",
-  borderRadius: 10,
-  background: "var(--surface)",
-  outline: "none",
-  fontSize: 14.5,
-  transition: "box-shadow .15s,border-color .15s",
-};
-
-function focusRing(e: React.FocusEvent<HTMLInputElement>, on: boolean) {
-  e.currentTarget.style.borderColor = on ? "var(--primary)" : "var(--border-strong)";
-  e.currentTarget.style.boxShadow = on ? "0 0 0 3px var(--ring)" : "none";
-}
-
-const demoBtnStyle: React.CSSProperties = {
-  textAlign: "left",
-  border: "1px solid var(--border)",
-  borderRadius: 11,
-  padding: "11px 12px",
-  background: "var(--surface-2)",
-  transition: "border-color .15s,background .15s",
-};
+const inputBase =
+  "h-[42px] w-full rounded-[10px] border border-border-strong bg-surface text-[14.5px] outline-none transition focus:border-primary focus:shadow-[0_0_0_3px_var(--ring)]";
+const fieldLabel = "block text-[12.5px] font-semibold text-text-muted";
+const demoCard =
+  "rounded-[11px] border border-border bg-surface-2 px-3 py-2.75 text-left transition hover:border-primary hover:bg-primary-soft";
 
 export function LoginForm() {
   const router = useRouter();
@@ -68,100 +48,37 @@ export function LoginForm() {
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(900px 480px at 80% -10%,var(--primary-soft),transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "relative",
-          width: "min(424px,94vw)",
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: 18,
-          boxShadow: "var(--shadow-lg)",
-          padding: "38px 34px",
-          animation: "aiselFadeUp .45s cubic-bezier(.2,.8,.2,1)",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 26 }}>
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 11,
-              background: "var(--primary)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 4px 12px var(--ring)",
-            }}
-          >
-            <PlusIcon size={20} style={{ stroke: "var(--primary-fg)" }} />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-6">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_480px_at_80%_-10%,var(--primary-soft),transparent_70%)]" />
+      <div className="relative w-[min(424px,94vw)] rounded-[18px] border border-border bg-surface px-[34px] py-[38px] shadow-(--shadow-lg) [animation:aiselFadeUp_.45s_cubic-bezier(.2,.8,.2,1)]">
+        <div className="mb-[26px] flex items-center gap-[11px]">
+          <div className="flex size-[38px] items-center justify-center rounded-[11px] bg-primary shadow-[0_4px_12px_var(--ring)]">
+            <PlusIcon size={20} className="text-primary-fg" />
           </div>
-          <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.05 }}>
-            <span style={{ fontWeight: 800, fontSize: 17, letterSpacing: "-.02em" }}>
-              {APP_NAME}
-            </span>
-            <span style={{ fontSize: 12, color: "var(--text-faint)", fontWeight: 500 }}>
-              Patient Management
-            </span>
+          <div className="flex flex-col leading-[1.05]">
+            <span className="text-[17px] font-extrabold tracking-[-0.02em]">{APP_NAME}</span>
+            <span className="text-xs font-medium text-text-faint">Patient Management</span>
           </div>
         </div>
-        <h1
-          style={{
-            margin: "0 0 4px",
-            fontSize: 23,
-            fontWeight: 700,
-            letterSpacing: "-.02em",
-          }}
-        >
+        <h1 className="mb-1 text-[23px] font-bold tracking-[-0.02em]">
           Sign in to your workspace
         </h1>
-        <p style={{ margin: "0 0 22px", color: "var(--text-muted)", fontSize: 14 }}>
+        <p className="mb-[22px] text-sm text-text-muted">
           Use a demo account below to explore both roles.
         </p>
 
         {error && (
           <div
             role="alert"
-            style={{
-              display: "flex",
-              gap: 8,
-              alignItems: "flex-start",
-              background: "color-mix(in srgb,#dc3838 12%,var(--surface))",
-              border: "1px solid color-mix(in srgb,#dc3838 30%,transparent)",
-              color: "#c62f2f",
-              borderRadius: 10,
-              padding: "9px 12px",
-              fontSize: 13,
-              marginBottom: 16,
-              fontWeight: 500,
-            }}
+            className="mb-4 flex items-start gap-2 rounded-[10px] border border-[color-mix(in_srgb,#dc3838_30%,transparent)] bg-[color-mix(in_srgb,#dc3838_12%,var(--surface))] px-3 py-[9px] text-[13px] font-medium text-[#c62f2f]"
           >
-            <AlertCircleIcon size={16} style={{ flex: "none", marginTop: 1 }} />
+            <AlertCircleIcon size={16} className="mt-px shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={onSubmit}>
-          <label htmlFor="email" style={labelStyle}>
+          <label htmlFor="email" className={`${fieldLabel} mb-1.5`}>
             Email
           </label>
           <input
@@ -174,14 +91,12 @@ export function LoginForm() {
             }}
             placeholder="you@aisel.health"
             autoComplete="username"
-            style={inputStyle}
-            onFocus={(e) => focusRing(e, true)}
-            onBlur={(e) => focusRing(e, false)}
+            className={`${inputBase} px-[13px]`}
           />
-          <label htmlFor="password" style={{ ...labelStyle, margin: "15px 0 6px" }}>
+          <label htmlFor="password" className={`${fieldLabel} mt-[15px] mb-1.5`}>
             Password
           </label>
-          <div style={{ position: "relative" }}>
+          <div className="relative">
             <input
               id="password"
               type={showPw ? "text" : "password"}
@@ -192,27 +107,13 @@ export function LoginForm() {
               }}
               placeholder="••••••••"
               autoComplete="current-password"
-              style={{ ...inputStyle, padding: "0 42px 0 13px" }}
-              onFocus={(e) => focusRing(e, true)}
-              onBlur={(e) => focusRing(e, false)}
+              className={`${inputBase} pr-[42px] pl-[13px]`}
             />
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
               aria-label="Toggle password visibility"
-              className="aisel-ghost"
-              style={{
-                position: "absolute",
-                right: 6,
-                top: 6,
-                width: 30,
-                height: 30,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 8,
-                color: "var(--text-faint)",
-              }}
+              className="absolute top-1.5 right-1.5 flex size-7.5 items-center justify-center rounded-lg text-text-faint transition-colors hover:bg-row-hover hover:text-text-muted"
             >
               <EyeIcon size={17} />
             </button>
@@ -220,101 +121,49 @@ export function LoginForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="aisel-primary"
-            style={{
-              marginTop: 22,
-              width: "100%",
-              height: 44,
-              borderRadius: 10,
-              background: "var(--primary)",
-              color: "var(--primary-fg)",
-              fontWeight: 650,
-              fontSize: 14.5,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 9,
-              boxShadow: "0 4px 12px var(--ring)",
-              transition: "filter .15s,transform .06s",
-              opacity: submitting ? 0.85 : 1,
-            }}
+            className="mt-[22px] flex h-11 w-full items-center justify-center gap-2.25 rounded-[10px] bg-primary text-[14.5px] font-[650] text-primary-fg shadow-[0_4px_12px_var(--ring)] transition hover:brightness-105 active:translate-y-px disabled:opacity-85"
           >
             {submitting && (
-              <span
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: "50%",
-                  border:
-                    "2px solid color-mix(in srgb,var(--primary-fg) 40%,transparent)",
-                  borderTopColor: "var(--primary-fg)",
-                  animation: "aiselSpin .7s linear infinite",
-                }}
-              />
+              <span className="size-4 rounded-full border-2 border-[color-mix(in_srgb,var(--primary-fg)_40%,transparent)] border-t-primary-fg [animation:aiselSpin_.7s_linear_infinite]" />
             )}
             <span>{submitting ? "Signing in…" : "Sign in"}</span>
           </button>
         </form>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            margin: "22px 0 14px",
-          }}
-        >
-          <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-          <span
-            style={{
-              fontSize: 11.5,
-              fontWeight: 600,
-              letterSpacing: ".04em",
-              textTransform: "uppercase",
-              color: "var(--text-faint)",
-            }}
-          >
+        <div className="mt-[22px] mb-3.5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-[11.5px] font-semibold tracking-[0.04em] text-text-faint uppercase">
             Demo accounts
           </span>
-          <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+          <div className="h-px flex-1 bg-border" />
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        <div className="grid grid-cols-2 gap-2.5">
           <button
             type="button"
-            className="aisel-demo-card"
+            className={demoCard}
             onClick={() => {
               setEmail("admin@aisel.health");
               setPassword("aisel1234");
               setError("");
             }}
-            style={demoBtnStyle}
           >
-            <div style={{ fontSize: 13, fontWeight: 700 }}>Admin</div>
-            <div style={{ fontSize: 11.5, color: "var(--text-muted)" }}>Full access</div>
+            <div className="text-[13px] font-bold">Admin</div>
+            <div className="text-[11.5px] text-text-muted">Full access</div>
           </button>
           <button
             type="button"
-            className="aisel-demo-card"
+            className={demoCard}
             onClick={() => {
               setEmail("user@aisel.health");
               setPassword("aisel1234");
               setError("");
             }}
-            style={demoBtnStyle}
           >
-            <div style={{ fontSize: 13, fontWeight: 700 }}>Member</div>
-            <div style={{ fontSize: 11.5, color: "var(--text-muted)" }}>View only</div>
+            <div className="text-[13px] font-bold">Member</div>
+            <div className="text-[11.5px] text-text-muted">View only</div>
           </button>
         </div>
       </div>
     </div>
   );
 }
-
-const labelStyle: React.CSSProperties = {
-  display: "block",
-  fontSize: 12.5,
-  fontWeight: 600,
-  color: "var(--text-muted)",
-  marginBottom: 6,
-};

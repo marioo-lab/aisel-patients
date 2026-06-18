@@ -1,7 +1,11 @@
 "use client";
 
-import * as React from "react";
-import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { CloseIcon, EditIcon, TrashIcon } from "@/components/icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePatient } from "@/hooks/use-patients";
@@ -44,126 +48,51 @@ export function PatientViewSheet({
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="w-[min(440px,100vw)] max-w-none gap-0 p-0 bg-surface border-l border-border"
+        className="w-[min(440px,100vw)] max-w-none gap-0 border-l border-border bg-surface p-0"
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            padding: "18px 20px",
-            borderBottom: "1px solid var(--border)",
-          }}
-        >
-          <SheetTitle
-            style={{
-              margin: 0,
-              fontSize: 18,
-              fontWeight: 750,
-              letterSpacing: "-.02em",
-              color: "var(--text)",
-            }}
-          >
+        <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-[18px]">
+          <SheetTitle className="m-0 text-[18px] font-[750] tracking-[-0.02em] text-text">
             {patient ? `${patient.firstName} ${patient.lastName}` : "Patient"}
           </SheetTitle>
           <SheetDescription className="sr-only">Patient details</SheetDescription>
           <button
             onClick={() => onOpenChange(false)}
             aria-label="Close"
-            className="aisel-ghost"
-            style={{
-              width: 32,
-              height: 32,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 9,
-              color: "var(--text-muted)",
-            }}
+            className="flex size-8 items-center justify-center rounded-[9px] text-text-muted transition-colors hover:bg-row-hover hover:text-text"
           >
             <CloseIcon size={18} strokeWidth={2} />
           </button>
         </div>
 
-        <div style={{ flex: 1, overflowY: "auto", padding: "22px 20px" }}>
+        <div className="flex-1 overflow-y-auto px-5 py-[22px]">
           {isLoading && <ViewSkeleton />}
           {error && !isLoading && (
-            <div style={{ color: "#dc3838", fontSize: 14 }}>
-              Couldn&apos;t load this patient.
-            </div>
+            <div className="text-sm text-[#dc3838]">Couldn&apos;t load this patient.</div>
           )}
           {patient && av && (
             <>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 14,
-                  marginBottom: 24,
-                }}
-              >
+              <div className="mb-6 flex items-center gap-3.5">
                 <span
-                  style={{
-                    width: 58,
-                    height: 58,
-                    borderRadius: "50%",
-                    background: av.bg,
-                    color: av.fg,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 21,
-                    fontWeight: 750,
-                    flex: "none",
-                  }}
+                  className="flex size-[58px] shrink-0 items-center justify-center rounded-full text-[21px] font-[750]"
+                  style={{ background: av.bg, color: av.fg }}
                 >
                   {av.initials}
                 </span>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 20, fontWeight: 750, letterSpacing: "-.02em" }}>
+                <div className="min-w-0">
+                  <div className="text-xl font-[750] tracking-[-0.02em]">
                     {patient.firstName} {patient.lastName}
                   </div>
                 </div>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 2,
-                  border: "1px solid var(--border)",
-                  borderRadius: 12,
-                  overflow: "hidden",
-                }}
-              >
+              <div className="flex flex-col gap-0.5 overflow-hidden rounded-xl border border-border">
                 {rows.map(([label, value, shaded]) => (
                   <div
                     key={label}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 16,
-                      padding: "13px 15px",
-                      background: shaded ? "var(--surface-2)" : "transparent",
-                    }}
+                    className={`flex justify-between gap-4 px-[15px] py-3.25 ${shaded ? "bg-surface-2" : ""}`}
                   >
+                    <span className="text-[13px] font-[550] text-text-muted">{label}</span>
                     <span
-                      style={{
-                        fontSize: 13,
-                        color: "var(--text-muted)",
-                        fontWeight: 550,
-                      }}
-                    >
-                      {label}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 13.5,
-                        fontWeight: 600,
-                        textAlign: "right",
-                        fontVariantNumeric: "tabular-nums",
-                        wordBreak: label === "Email" ? "break-all" : "normal",
-                      }}
+                      className={`text-right text-[13.5px] font-semibold tabular-nums ${label === "Email" ? "break-all" : ""}`}
                     >
                       {value}
                     </span>
@@ -175,32 +104,11 @@ export function PatientViewSheet({
         </div>
 
         {patient && (canEdit || canDelete) && (
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              padding: "16px 20px",
-              borderTop: "1px solid var(--border)",
-            }}
-          >
+          <div className="flex gap-2.5 border-t border-border px-5 py-4">
             {canDelete && (
               <button
                 onClick={() => onDelete(patient)}
-                className="aisel-danger"
-                style={{
-                  flex: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 7,
-                  height: 42,
-                  padding: "0 16px",
-                  borderRadius: 10,
-                  border: "1px solid color-mix(in srgb,#dc3838 35%,transparent)",
-                  color: "#dc3838",
-                  fontWeight: 600,
-                  fontSize: 14,
-                  background: "var(--surface)",
-                }}
+                className="flex h-[42px] shrink-0 items-center gap-1.75 rounded-[10px] border border-[color-mix(in_srgb,#dc3838_35%,transparent)] bg-surface px-4 text-sm font-semibold text-[#dc3838] transition hover:bg-[color-mix(in_srgb,#dc3838_10%,transparent)]"
               >
                 <TrashIcon size={16} />
                 Delete
@@ -209,20 +117,7 @@ export function PatientViewSheet({
             {canEdit && (
               <button
                 onClick={() => onEdit(patient)}
-                className="aisel-primary"
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 7,
-                  height: 42,
-                  borderRadius: 10,
-                  background: "var(--primary)",
-                  color: "var(--primary-fg)",
-                  fontWeight: 650,
-                  fontSize: 14,
-                }}
+                className="flex h-[42px] flex-1 items-center justify-center gap-1.75 rounded-[10px] bg-primary text-sm font-[650] text-primary-fg transition hover:brightness-105"
               >
                 <EditIcon size={16} />
                 Edit patient
@@ -239,32 +134,15 @@ export function PatientViewSheet({
 function ViewSkeleton() {
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
-        <Skeleton className="rounded-full" style={{ width: 58, height: 58, flex: "none" }} />
-        <Skeleton style={{ height: 20, width: 160 }} />
+      <div className="mb-6 flex items-center gap-3.5">
+        <Skeleton className="size-[58px] shrink-0 rounded-full" />
+        <Skeleton className="h-5 w-40" />
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          border: "1px solid var(--border)",
-          borderRadius: 12,
-          overflow: "hidden",
-        }}
-      >
+      <div className="flex flex-col gap-0.5 overflow-hidden rounded-xl border border-border">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 16,
-              padding: "13px 15px",
-            }}
-          >
-            <Skeleton style={{ height: 13, width: 72 }} />
-            <Skeleton style={{ height: 13, width: 110 }} />
+          <div key={i} className="flex justify-between gap-4 px-[15px] py-3.25">
+            <Skeleton className="h-[13px] w-[72px]" />
+            <Skeleton className="h-[13px] w-[110px]" />
           </div>
         ))}
       </div>

@@ -14,13 +14,7 @@ export type ColumnCallbacks = {
   onDelete: (p: PatientDTO) => void;
 };
 
-const muted: React.CSSProperties = {
-  fontSize: 13.5,
-  color: "var(--text-muted)",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-};
+const muted = "overflow-hidden text-[13.5px] text-ellipsis whitespace-nowrap text-text-muted";
 
 export function getColumns({
   canEdit,
@@ -39,33 +33,14 @@ export function getColumns({
         const p = row.original;
         const av = avatar(p, isDark);
         return (
-          <div style={{ display: "flex", alignItems: "center", gap: 11, minWidth: 0 }}>
+          <div className="flex min-w-0 items-center gap-2.75">
             <span
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: "50%",
-                background: av.bg,
-                color: av.fg,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 12,
-                fontWeight: 700,
-                flex: "none",
-              }}
+              className="flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+              style={{ background: av.bg, color: av.fg }}
             >
               {av.initials}
             </span>
-            <span
-              style={{
-                fontSize: 14,
-                fontWeight: 600,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span className="overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap">
               {p.firstName} {p.lastName}
             </span>
           </div>
@@ -76,16 +51,14 @@ export function getColumns({
       id: "email",
       header: "Email",
       enableSorting: true,
-      cell: ({ row }) => <div style={muted}>{row.original.email}</div>,
+      cell: ({ row }) => <div className={muted}>{row.original.email}</div>,
     },
     {
       id: "phoneNumber",
       header: "Phone",
       enableSorting: false,
       cell: ({ row }) => (
-        <div style={{ ...muted, fontVariantNumeric: "tabular-nums" }}>
-          {row.original.phoneNumber}
-        </div>
+        <div className={`${muted} tabular-nums`}>{row.original.phoneNumber}</div>
       ),
     },
     {
@@ -93,9 +66,7 @@ export function getColumns({
       header: "Date of birth",
       enableSorting: true,
       cell: ({ row }) => (
-        <div style={{ ...muted, fontVariantNumeric: "tabular-nums" }}>
-          {formatDob(row.original.dob)}
-        </div>
+        <div className={`${muted} tabular-nums`}>{formatDob(row.original.dob)}</div>
       ),
     },
     {
@@ -104,9 +75,7 @@ export function getColumns({
       enableSorting: false,
       meta: { align: "right" },
       cell: ({ row }) => (
-        <div style={{ ...muted, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
-          {age(row.original.dob)}
-        </div>
+        <div className={`${muted} text-right tabular-nums`}>{age(row.original.dob)}</div>
       ),
     },
     {
@@ -114,7 +83,7 @@ export function getColumns({
       header: "",
       enableSorting: false,
       cell: ({ row }) => (
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div className="flex justify-end">
           <RowActions
             canEdit={canEdit}
             canDelete={canDelete}

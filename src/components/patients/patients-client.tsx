@@ -27,9 +27,13 @@ import type { PatientDTO, PatientInput, SORT_KEYS } from "@/lib/validations/pati
 
 type SortKey = (typeof SORT_KEYS)[number];
 const LIMIT = 10;
-const ROW_H = 58;
-const CARD_H = 71;
 const SORTABLE = new Set<SortKey>(["lastName", "email", "dob"]);
+// Reserve constant rows-area height so the footer never shifts.
+const TABLE_MIN_H = "min-h-[580px]"; // 10 rows × 58px
+const CARD_MIN_H = "min-h-[710px]"; // 10 cards × 71px
+
+const primaryBtn =
+  "flex h-10 items-center gap-2 rounded-[10px] bg-primary px-4.5 text-sm font-[650] text-primary-fg transition hover:brightness-105 active:translate-y-px";
 
 function useWindowWidth() {
   const [vw, setVw] = React.useState(1280);
@@ -165,11 +169,7 @@ export function PatientsClient({
       await update(id, values);
     } catch (e) {
       if (!(e instanceof ApiError && e.fieldErrors))
-        showToast({
-          title: "Couldn't save changes",
-          msg: errMsg(e),
-          barColor: "#dc3838",
-        });
+        showToast({ title: "Couldn't save changes", msg: errMsg(e), barColor: "#dc3838" });
       throw e;
     }
     showToast({
@@ -191,11 +191,7 @@ export function PatientsClient({
         barColor: "var(--text-muted)",
       });
     } catch (e) {
-      showToast({
-        title: "Couldn't delete patient",
-        msg: errMsg(e),
-        barColor: "#dc3838",
-      });
+      showToast({ title: "Couldn't delete patient", msg: errMsg(e), barColor: "#dc3838" });
     }
   }
 
@@ -212,80 +208,31 @@ export function PatientsClient({
     <div>
       <Topbar user={user} />
 
-      <main style={{ maxWidth: 1180, margin: "0 auto", padding: "26px 20px 80px" }}>
+      <main className="mx-auto max-w-[1180px] px-5 pt-6.5 pb-20">
         {/* toolbar */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            gap: 16,
-            flexWrap: "wrap",
-            marginBottom: 18,
-          }}
-        >
+        <div className="mb-4.5 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: 25,
-                fontWeight: 800,
-                letterSpacing: "-.025em",
-              }}
-            >
-              Patients
-            </h1>
-            <p style={{ margin: "4px 0 0", color: "var(--text-muted)", fontSize: 13.5 }}>
-              {countLabel}
-            </p>
+            <h1 className="m-0 text-[25px] font-extrabold tracking-[-0.025em]">Patients</h1>
+            <p className="mt-1 text-[13.5px] text-text-muted">{countLabel}</p>
           </div>
-          <div
-            style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}
-          >
-            <div style={{ position: "relative" }}>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="relative">
               <SearchIcon
                 size={16}
-                style={{
-                  stroke: "var(--text-faint)",
-                  position: "absolute",
-                  left: 11,
-                  top: 11,
-                }}
+                className="absolute top-2.75 left-2.75 text-text-faint"
               />
               <input
                 value={qInput}
                 onChange={(e) => setQInput(e.target.value)}
                 placeholder="Search name, email, phone…"
                 aria-label="Search patients"
-                style={{
-                  width: 248,
-                  maxWidth: "54vw",
-                  height: 38,
-                  padding: "0 32px 0 34px",
-                  border: "1px solid var(--border-strong)",
-                  borderRadius: 10,
-                  background: "var(--surface)",
-                  outline: "none",
-                  fontSize: 13.5,
-                }}
+                className="h-9.5 w-62 max-w-[54vw] rounded-[10px] border border-border-strong bg-surface pr-8 pl-8.5 text-[13.5px] outline-none focus:border-primary focus:shadow-[0_0_0_3px_var(--ring)]"
               />
               {qInput && (
                 <button
                   onClick={() => setQInput("")}
                   aria-label="Clear search"
-                  className="aisel-ghost"
-                  style={{
-                    position: "absolute",
-                    right: 7,
-                    top: 9,
-                    width: 21,
-                    height: 21,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 6,
-                    color: "var(--text-faint)",
-                  }}
+                  className="absolute top-2.25 right-1.75 flex size-[21px] items-center justify-center rounded-md text-text-faint transition-colors hover:bg-row-hover hover:text-text"
                 >
                   <CloseIcon size={13} />
                 </button>
@@ -294,38 +241,14 @@ export function PatientsClient({
             <button
               onClick={() => mutate()}
               aria-label="Refresh"
-              className="aisel-ghost"
-              style={{
-                width: 38,
-                height: 38,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 10,
-                border: "1px solid var(--border-strong)",
-                color: "var(--text-muted)",
-                background: "var(--surface)",
-              }}
+              className="flex size-9.5 items-center justify-center rounded-[10px] border border-border-strong bg-surface text-text-muted transition-colors hover:bg-row-hover hover:text-text"
             >
               <RefreshIcon size={16} />
             </button>
             {canCreate && (
               <button
                 onClick={() => setForm({ mode: "create", patient: null })}
-                className="aisel-primary"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 7,
-                  height: 38,
-                  padding: "0 15px",
-                  borderRadius: 10,
-                  background: "var(--primary)",
-                  color: "var(--primary-fg)",
-                  fontWeight: 650,
-                  fontSize: 13.5,
-                  boxShadow: "0 3px 10px var(--ring)",
-                }}
+                className="flex h-9.5 items-center gap-1.75 rounded-[10px] bg-primary px-3.75 text-[13.5px] font-[650] text-primary-fg shadow-[0_3px_10px_var(--ring)] transition hover:brightness-105 active:translate-y-px"
               >
                 <PlusIcon size={16} strokeWidth={2.3} />
                 New patient
@@ -335,29 +258,17 @@ export function PatientsClient({
         </div>
 
         {/* card */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--border)",
-            borderRadius: 14,
-            boxShadow: "var(--shadow)",
-            overflow: "hidden",
-          }}
-        >
+        <div className="overflow-hidden rounded-[14px] border border-border bg-surface shadow-(--shadow)">
           {showSkeleton && <TableSkeleton isMobile={isMobile} />}
 
           {showError && (
             <StatePanel
-              icon={<TriangleAlertIcon size={26} style={{ stroke: "#dc3838" }} />}
+              icon={<TriangleAlertIcon size={26} className="text-[#dc3838]" />}
               danger
               title="Couldn't load patients"
               body="The request to the patients service failed. Check your connection and try again."
               action={
-                <button
-                  onClick={() => mutate()}
-                  className="aisel-primary"
-                  style={primaryBtn}
-                >
+                <button onClick={() => mutate()} className={primaryBtn}>
                   <RefreshIcon size={16} strokeWidth={2} /> Retry
                 </button>
               }
@@ -377,16 +288,14 @@ export function PatientsClient({
                 searchActive ? (
                   <button
                     onClick={() => setQInput("")}
-                    className="aisel-outline"
-                    style={outlineBtn}
+                    className="h-9.5 rounded-[10px] border border-border-strong bg-surface px-4 text-[13.5px] font-semibold transition hover:bg-row-hover"
                   >
                     Clear search
                   </button>
                 ) : canCreate ? (
                   <button
                     onClick={() => setForm({ mode: "create", patient: null })}
-                    className="aisel-primary"
-                    style={{ ...primaryBtn, height: 38, fontSize: 13.5 }}
+                    className="flex h-9.5 items-center rounded-[10px] bg-primary px-4 text-[13.5px] font-[650] text-primary-fg transition hover:brightness-105 active:translate-y-px"
                   >
                     Add first patient
                   </button>
@@ -397,83 +306,39 @@ export function PatientsClient({
 
           {showData &&
             (isMobile ? (
-              <div style={{ minHeight: LIMIT * CARD_H }}>
+              <div className={CARD_MIN_H}>
                 {rows.map((p) => {
                   const av = avatar(p, isDark);
                   return (
                     <div
                       key={p.id}
                       onClick={() => openView(p)}
-                      className="aisel-row"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "14px 16px",
-                        borderBottom: "1px solid var(--border)",
-                        cursor: "pointer",
-                      }}
+                      className="flex cursor-pointer items-center gap-3 border-b border-border px-4 py-3.5 transition-colors hover:bg-row-hover"
                     >
                       <span
-                        style={{
-                          width: 42,
-                          height: 42,
-                          borderRadius: "50%",
-                          background: av.bg,
-                          color: av.fg,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontSize: 15,
-                          fontWeight: 700,
-                          flex: "none",
-                        }}
+                        className="flex size-[42px] shrink-0 items-center justify-center rounded-full text-[15px] font-bold"
+                        style={{ background: av.bg, color: av.fg }}
                       >
                         {av.initials}
                       </span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div
-                          style={{
-                            fontSize: 15,
-                            fontWeight: 650,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
+                      <div className="min-w-0 flex-1">
+                        <div className="overflow-hidden text-[15px] font-[650] text-ellipsis whitespace-nowrap">
                           {p.firstName} {p.lastName}
                         </div>
-                        <div
-                          style={{
-                            fontSize: 13,
-                            color: "var(--text-muted)",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
+                        <div className="overflow-hidden text-[13px] text-ellipsis whitespace-nowrap text-text-muted">
                           {p.email}
                         </div>
-                        <div
-                          style={{
-                            fontSize: 12.5,
-                            color: "var(--text-faint)",
-                            fontVariantNumeric: "tabular-nums",
-                          }}
-                        >
+                        <div className="text-[12.5px] text-text-faint tabular-nums">
                           {p.phoneNumber} · age {age(p.dob)}
                         </div>
                       </div>
-                      <ChevronRightIcon
-                        size={18}
-                        style={{ stroke: "var(--text-faint)", flex: "none" }}
-                      />
+                      <ChevronRightIcon size={18} className="shrink-0 text-text-faint" />
                     </div>
                   );
                 })}
               </div>
             ) : (
-              <div style={{ minHeight: LIMIT * ROW_H }}>
+              <div className={TABLE_MIN_H}>
                 <DataTable
                   columns={columns}
                   data={rows}
@@ -535,29 +400,6 @@ export function PatientsClient({
   );
 }
 
-const primaryBtn: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: 8,
-  height: 40,
-  padding: "0 18px",
-  borderRadius: 10,
-  background: "var(--primary)",
-  color: "var(--primary-fg)",
-  fontWeight: 650,
-  fontSize: 14,
-};
-
-const outlineBtn: React.CSSProperties = {
-  height: 38,
-  padding: "0 16px",
-  borderRadius: 10,
-  border: "1px solid var(--border-strong)",
-  fontWeight: 600,
-  fontSize: 13.5,
-  background: "var(--surface)",
-};
-
 function StatePanel({
   icon,
   title,
@@ -572,44 +414,18 @@ function StatePanel({
   danger?: boolean;
 }) {
   return (
-    <div
-      style={{
-        padding: "64px 24px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
+    <div className="flex flex-col items-center px-6 py-16 text-center">
       <div
-        style={{
-          width: 54,
-          height: 54,
-          borderRadius: 14,
-          background: danger
-            ? "color-mix(in srgb,#dc3838 13%,var(--surface))"
-            : "var(--surface-2)",
-          border: danger ? "none" : "1px solid var(--border)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 16,
-          color: "var(--text-faint)",
-        }}
+        className={`mb-4 flex size-[54px] items-center justify-center rounded-[14px] text-text-faint ${
+          danger
+            ? "bg-[color-mix(in_srgb,#dc3838_13%,var(--surface))]"
+            : "border border-border bg-surface-2"
+        }`}
       >
         {icon}
       </div>
-      <h3 style={{ margin: "0 0 6px", fontSize: 17, fontWeight: 700 }}>{title}</h3>
-      <p
-        style={{
-          margin: "0 0 20px",
-          color: "var(--text-muted)",
-          fontSize: 14,
-          maxWidth: 340,
-        }}
-      >
-        {body}
-      </p>
+      <h3 className="mb-1.5 text-[17px] font-bold">{title}</h3>
+      <p className="mb-5 max-w-[340px] text-sm text-text-muted">{body}</p>
       {action}
     </div>
   );
@@ -630,41 +446,19 @@ function Pagination({
 }) {
   const from = total === 0 ? 0 : (page - 1) * limit + 1;
   const to = Math.min(page * limit, total);
-  const pageBtnBase: React.CSSProperties = {
-    height: 32,
-    minWidth: 32,
-    padding: "0 8px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
-    border: "1px solid var(--border)",
-    background: "var(--surface)",
-  };
+  const navBtn =
+    "flex h-8 min-w-8 items-center justify-center rounded-lg border border-border bg-surface px-2 transition-colors hover:bg-row-hover";
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 12,
-        padding: "12px 18px",
-        flexWrap: "wrap",
-      }}
-    >
-      <span style={{ fontSize: 13, color: "var(--text-muted)" }}>
+    <div className="flex flex-wrap items-center justify-between gap-3 px-4.5 py-3">
+      <span className="text-[13px] text-text-muted">
         {total === 0 ? "0 results" : `${from}–${to} of ${total}`}
       </span>
-      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+      <div className="flex items-center gap-1">
         <button
           onClick={() => onPage(Math.max(1, page - 1))}
           disabled={page <= 1}
           aria-label="Previous page"
-          className="aisel-outline"
-          style={{
-            ...pageBtnBase,
-            color: page <= 1 ? "var(--text-faint)" : "var(--text)",
-          }}
+          className={`${navBtn} ${page <= 1 ? "text-text-faint" : "text-text"}`}
         >
           <ChevronLeftIcon size={15} />
         </button>
@@ -672,12 +466,7 @@ function Pagination({
           pg === "…" ? (
             <span
               key={`e${i}`}
-              style={{
-                minWidth: 30,
-                textAlign: "center",
-                color: "var(--text-faint)",
-                fontSize: 13,
-              }}
+              className="min-w-[30px] text-center text-[13px] text-text-faint"
             >
               …
             </span>
@@ -686,15 +475,11 @@ function Pagination({
               key={pg}
               onClick={() => onPage(pg)}
               aria-current={pg === page}
-              className="aisel-outline"
-              style={{
-                ...pageBtnBase,
-                fontSize: 13,
-                fontWeight: 600,
-                border: `1px solid ${pg === page ? "var(--primary)" : "var(--border)"}`,
-                background: pg === page ? "var(--primary)" : "var(--surface)",
-                color: pg === page ? "var(--primary-fg)" : "var(--text)",
-              }}
+              className={
+                pg === page
+                  ? "flex h-8 min-w-8 items-center justify-center rounded-lg border border-primary bg-primary px-2 text-[13px] font-semibold text-primary-fg"
+                  : "flex h-8 min-w-8 items-center justify-center rounded-lg border border-border bg-surface px-2 text-[13px] font-semibold text-text transition-colors hover:bg-row-hover"
+              }
             >
               {pg}
             </button>
@@ -704,11 +489,7 @@ function Pagination({
           onClick={() => onPage(Math.min(pageCount, page + 1))}
           disabled={page >= pageCount}
           aria-label="Next page"
-          className="aisel-outline"
-          style={{
-            ...pageBtnBase,
-            color: page >= pageCount ? "var(--text-faint)" : "var(--text)",
-          }}
+          className={`${navBtn} ${page >= pageCount ? "text-text-faint" : "text-text"}`}
         >
           <ChevronRightIcon size={15} strokeWidth={2.2} />
         </button>
@@ -718,39 +499,21 @@ function Pagination({
 }
 
 function TableSkeleton({ isMobile }: { isMobile: boolean }) {
-  const shimmer: React.CSSProperties = {
-    background:
-      "linear-gradient(90deg,var(--surface-2),var(--row-hover),var(--surface-2))",
-    backgroundSize: "420px 100%",
-    animation: "aiselShimmer 1.4s infinite",
-  };
   return (
-    <div style={{ minHeight: LIMIT * (isMobile ? CARD_H : ROW_H) }}>
+    <div className={isMobile ? CARD_MIN_H : TABLE_MIN_H}>
       {Array.from({ length: LIMIT }).map((_, i) => (
         <div
           key={i}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            padding: isMobile ? "15px 16px" : "13px 18px",
-            borderBottom: "1px solid var(--border)",
-          }}
+          className={`flex items-center gap-3 border-b border-border ${
+            isMobile ? "px-4 py-3.75" : "px-4.5 py-3.25"
+          }`}
         >
-          <div
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: "50%",
-              flex: "none",
-              ...shimmer,
-            }}
-          />
-          <div style={{ height: 12, width: "32%", borderRadius: 6, ...shimmer }} />
+          <div className="aisel-shimmer size-[34px] shrink-0 rounded-full" />
+          <div className="aisel-shimmer h-3 w-[32%] rounded-md" />
           {!isMobile && (
             <>
-              <div style={{ height: 12, width: "26%", borderRadius: 6, ...shimmer }} />
-              <div style={{ height: 12, width: "16%", borderRadius: 6, ...shimmer }} />
+              <div className="aisel-shimmer h-3 w-[26%] rounded-md" />
+              <div className="aisel-shimmer h-3 w-[16%] rounded-md" />
             </>
           )}
         </div>

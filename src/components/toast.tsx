@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { toast } from "sonner";
 import { CloseIcon } from "./icons";
 
@@ -15,36 +14,14 @@ type AiselToast = {
 export function showToast({ title, msg, barColor, hasUndo, onUndo }: AiselToast) {
   toast.custom(
     (id) => (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 11,
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: 12,
-          boxShadow: "var(--shadow-lg)",
-          padding: "13px 14px",
-          width: "min(360px,calc(100vw - 40px))",
-        }}
-      >
+      <div className="flex w-[min(360px,calc(100vw-40px))] items-start gap-2.75 rounded-xl border border-border bg-surface px-3.5 py-3.25 shadow-(--shadow-lg)">
         <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
-            background: barColor || "var(--primary)",
-            marginTop: 5,
-            flex: "none",
-          }}
+          className="mt-1.25 size-2 shrink-0 rounded-full"
+          style={{ background: barColor || "var(--primary)" }}
         />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13.5, fontWeight: 700, color: "var(--text)" }}>
-            {title}
-          </div>
-          <div style={{ fontSize: 12.5, color: "var(--text-muted)", marginTop: 1 }}>
-            {msg}
-          </div>
+        <div className="min-w-0 flex-1">
+          <div className="text-[13.5px] font-bold text-text">{title}</div>
+          <div className="mt-px text-[12.5px] text-text-muted">{msg}</div>
         </div>
         {hasUndo && (
           <button
@@ -52,14 +29,7 @@ export function showToast({ title, msg, barColor, hasUndo, onUndo }: AiselToast)
               onUndo?.();
               toast.dismiss(id);
             }}
-            style={{
-              flex: "none",
-              fontSize: 13,
-              fontWeight: 700,
-              color: "var(--primary)",
-              padding: "3px 6px",
-              borderRadius: 6,
-            }}
+            className="shrink-0 rounded-md px-1.5 py-[3px] text-[13px] font-bold text-primary transition-colors hover:bg-primary-soft"
           >
             Undo
           </button>
@@ -67,16 +37,7 @@ export function showToast({ title, msg, barColor, hasUndo, onUndo }: AiselToast)
         <button
           onClick={() => toast.dismiss(id)}
           aria-label="Dismiss"
-          style={{
-            flex: "none",
-            width: 22,
-            height: 22,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 6,
-            color: "var(--text-faint)",
-          }}
+          className="flex size-[22px] shrink-0 items-center justify-center rounded-md text-text-faint transition-colors hover:bg-row-hover hover:text-text"
         >
           <CloseIcon size={13} strokeWidth={2.3} />
         </button>

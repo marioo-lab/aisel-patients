@@ -35,74 +35,30 @@ export function DeleteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="w-[min(412px,94vw)] max-w-none gap-0 rounded-2xl border border-border bg-surface p-6 ring-0 shadow-(--shadow-lg)"
+        className="w-[min(412px,94vw)] max-w-none gap-0 rounded-2xl border border-border bg-surface p-6 shadow-(--shadow-lg) ring-0"
       >
-        <div
-          style={{
-            width: 46,
-            height: 46,
-            borderRadius: 12,
-            background: "color-mix(in srgb,#dc3838 13%,var(--surface))",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: 15,
-          }}
-        >
-          <TrashIcon size={22} style={{ stroke: "#dc3838" }} />
+        <div className="mb-[15px] flex size-[46px] items-center justify-center rounded-xl bg-[color-mix(in_srgb,#dc3838_13%,var(--surface))]">
+          <TrashIcon size={22} className="text-[#dc3838]" />
         </div>
-        <DialogTitle
-          style={{
-            margin: "0 0 7px",
-            fontSize: 18,
-            fontWeight: 750,
-            color: "var(--text)",
-          }}
-        >
+        <DialogTitle className="mb-[7px] text-[18px] font-[750] text-text">
           Delete patient?
         </DialogTitle>
-        <DialogDescription
-          style={{
-            margin: "0 0 22px",
-            color: "var(--text-muted)",
-            fontSize: 14,
-            lineHeight: 1.5,
-          }}
-        >
+        <DialogDescription className="mb-[22px] text-sm leading-[1.5] text-text-muted">
           This will permanently remove{" "}
-          <strong style={{ color: "var(--text)", fontWeight: 650 }}>{patientName}</strong>{" "}
-          from the directory. This action cannot be undone.
+          <strong className="font-[650] text-text">{patientName}</strong> from the directory.
+          This action cannot be undone.
         </DialogDescription>
-        <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
+        <div className="flex justify-end gap-2.5">
           <button
             onClick={() => onOpenChange(false)}
-            className="aisel-outline"
-            style={{
-              height: 40,
-              padding: "0 16px",
-              borderRadius: 10,
-              border: "1px solid var(--border-strong)",
-              fontWeight: 600,
-              fontSize: 14,
-              background: "var(--surface)",
-            }}
+            className="h-10 rounded-[10px] border border-border-strong bg-surface px-4 text-sm font-semibold transition hover:bg-row-hover"
           >
             Cancel
           </button>
           <button
             onClick={confirm}
             disabled={busy}
-            className="aisel-primary"
-            style={{
-              height: 40,
-              padding: "0 18px",
-              borderRadius: 10,
-              background: "#dc3838",
-              color: "#fff",
-              fontWeight: 650,
-              fontSize: 14,
-              opacity: busy ? 0.85 : 1,
-            }}
+            className="h-10 rounded-[10px] bg-[#dc3838] px-[18px] text-sm font-[650] text-white transition hover:brightness-105 disabled:opacity-85"
           >
             Delete
           </button>

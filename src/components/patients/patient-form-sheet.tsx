@@ -3,7 +3,12 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { CloseIcon } from "@/components/icons";
 import { ApiError } from "@/lib/api-error";
 import {
@@ -12,20 +17,8 @@ import {
   type PatientDTO,
 } from "@/lib/validations/patient";
 
-const labelStyle: React.CSSProperties = {
-  display: "block",
-  fontSize: 12.5,
-  fontWeight: 600,
-  color: "var(--text-muted)",
-  marginBottom: 6,
-};
-
-const errStyle: React.CSSProperties = {
-  fontSize: 12,
-  color: "#dc3838",
-  marginTop: 5,
-  fontWeight: 500,
-};
+const labelCls = "mb-1.5 block text-[12.5px] font-semibold text-text-muted";
+const errCls = "mt-1.25 text-xs font-medium text-[#dc3838]";
 
 const emptyDefaults: PatientInput = {
   firstName: "",
@@ -98,27 +91,10 @@ export function PatientFormSheet({
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="w-[min(440px,100vw)] max-w-none gap-0 p-0 bg-surface border-l border-border"
+        className="w-[min(440px,100vw)] max-w-none gap-0 border-l border-border bg-surface p-0"
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            padding: "18px 20px",
-            borderBottom: "1px solid var(--border)",
-          }}
-        >
-          <SheetTitle
-            style={{
-              margin: 0,
-              fontSize: 18,
-              fontWeight: 750,
-              letterSpacing: "-.02em",
-              color: "var(--text)",
-            }}
-          >
+        <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-[18px]">
+          <SheetTitle className="m-0 text-[18px] font-[750] tracking-[-0.02em] text-text">
             {title}
           </SheetTitle>
           <SheetDescription className="sr-only">
@@ -129,38 +105,17 @@ export function PatientFormSheet({
           <button
             onClick={() => onOpenChange(false)}
             aria-label="Close"
-            className="aisel-ghost"
-            style={{
-              width: 32,
-              height: 32,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 9,
-              color: "var(--text-muted)",
-            }}
+            className="flex size-8 items-center justify-center rounded-[9px] text-text-muted transition-colors hover:bg-row-hover hover:text-text"
           >
             <CloseIcon size={18} strokeWidth={2} />
           </button>
         </div>
 
-        <form
-          onSubmit={submit}
-          style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}
-        >
-          <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              padding: "22px 20px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <form onSubmit={submit} className="flex min-h-0 flex-1 flex-col">
+          <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 py-[22px]">
+            <div className="grid grid-cols-2 gap-3.5">
               <div>
-                <label htmlFor="firstName" style={labelStyle}>
+                <label htmlFor="firstName" className={labelCls}>
                   First name
                 </label>
                 <input
@@ -170,12 +125,10 @@ export function PatientFormSheet({
                   placeholder="Jane"
                   {...register("firstName")}
                 />
-                {errors.firstName && (
-                  <div style={errStyle}>{errors.firstName.message}</div>
-                )}
+                {errors.firstName && <div className={errCls}>{errors.firstName.message}</div>}
               </div>
               <div>
-                <label htmlFor="lastName" style={labelStyle}>
+                <label htmlFor="lastName" className={labelCls}>
                   Last name
                 </label>
                 <input
@@ -185,11 +138,11 @@ export function PatientFormSheet({
                   placeholder="Doe"
                   {...register("lastName")}
                 />
-                {errors.lastName && <div style={errStyle}>{errors.lastName.message}</div>}
+                {errors.lastName && <div className={errCls}>{errors.lastName.message}</div>}
               </div>
             </div>
             <div>
-              <label htmlFor="email" style={labelStyle}>
+              <label htmlFor="email" className={labelCls}>
                 Email
               </label>
               <input
@@ -200,10 +153,10 @@ export function PatientFormSheet({
                 placeholder="jane.doe@email.com"
                 {...register("email")}
               />
-              {errors.email && <div style={errStyle}>{errors.email.message}</div>}
+              {errors.email && <div className={errCls}>{errors.email.message}</div>}
             </div>
             <div>
-              <label htmlFor="phoneNumber" style={labelStyle}>
+              <label htmlFor="phoneNumber" className={labelCls}>
                 Phone number
               </label>
               <input
@@ -214,63 +167,36 @@ export function PatientFormSheet({
                 {...register("phoneNumber")}
               />
               {errors.phoneNumber && (
-                <div style={errStyle}>{errors.phoneNumber.message}</div>
+                <div className={errCls}>{errors.phoneNumber.message}</div>
               )}
             </div>
             <div>
-              <label htmlFor="dob" style={labelStyle}>
+              <label htmlFor="dob" className={labelCls}>
                 Date of birth
               </label>
               <input
                 id="dob"
                 type="date"
                 max={todayISO}
-                className="aisel-input"
+                className="aisel-input tabular-nums"
                 aria-invalid={!!errors.dob}
-                style={{ fontVariantNumeric: "tabular-nums" }}
                 {...register("dob")}
               />
-              {errors.dob && <div style={errStyle}>{errors.dob.message}</div>}
+              {errors.dob && <div className={errCls}>{errors.dob.message}</div>}
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              padding: "16px 20px",
-              borderTop: "1px solid var(--border)",
-            }}
-          >
+          <div className="flex gap-2.5 border-t border-border px-5 py-4">
             <button
               type="button"
               onClick={() => onOpenChange(false)}
-              className="aisel-outline"
-              style={{
-                flex: 1,
-                height: 42,
-                borderRadius: 10,
-                border: "1px solid var(--border-strong)",
-                fontWeight: 600,
-                fontSize: 14,
-                background: "var(--surface)",
-              }}
+              className="h-[42px] flex-1 rounded-[10px] border border-border-strong bg-surface text-sm font-semibold transition hover:bg-row-hover"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="aisel-primary"
-              style={{
-                flex: 1,
-                height: 42,
-                borderRadius: 10,
-                background: "var(--primary)",
-                color: "var(--primary-fg)",
-                fontWeight: 650,
-                fontSize: 14,
-                opacity: isSubmitting ? 0.85 : 1,
-              }}
+              className="h-[42px] flex-1 rounded-[10px] bg-primary text-sm font-[650] text-primary-fg transition hover:brightness-105 disabled:opacity-85"
             >
               {submitLabel}
             </button>
