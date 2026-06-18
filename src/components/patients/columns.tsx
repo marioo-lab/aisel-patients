@@ -28,6 +28,7 @@ export function getColumns({
     {
       id: "lastName",
       header: "Name",
+      accessorKey: "lastName",
       enableSorting: true,
       cell: ({ row }) => {
         const p = row.original;
@@ -50,6 +51,7 @@ export function getColumns({
     {
       id: "email",
       header: "Email",
+      accessorKey: "email",
       enableSorting: true,
       cell: ({ row }) => <div className={muted}>{row.original.email}</div>,
     },
@@ -64,6 +66,7 @@ export function getColumns({
     {
       id: "dob",
       header: "Date of birth",
+      accessorKey: "dob",
       enableSorting: true,
       cell: ({ row }) => (
         <div className={`${muted} tabular-nums`}>{formatDob(row.original.dob)}</div>

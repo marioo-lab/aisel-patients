@@ -65,13 +65,16 @@ export function DataTable<TData, TValue>({
     <Table className="min-w-140">
       <TableHeader>
         {table.getHeaderGroups().map((hg) => (
-          <TableRow key={hg.id} className="border-b border-border bg-surface-2 hover:bg-surface-2">
+          <TableRow
+            key={hg.id}
+            className="border-b border-border bg-surface-2 hover:bg-surface-2"
+          >
             {hg.headers.map((header) => {
               const canSort = header.column.getCanSort();
               const sorted = header.column.getIsSorted();
               const align =
-                (header.column.columnDef.meta as { align?: string } | undefined)?.align ===
-                "right"
+                (header.column.columnDef.meta as { align?: string } | undefined)
+                  ?.align === "right"
                   ? "text-right"
                   : "text-left";
               return (
